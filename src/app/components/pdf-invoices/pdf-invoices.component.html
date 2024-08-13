@@ -1,0 +1,60 @@
+<div class="w-full h-full" id="htmlDataCSS">
+  <!-- <div id="htmlData" > -->
+  
+  <!-- <div  class="w-full h-full  flex flex-col items-center justify-center"> -->
+      
+      <div class="boarding-pass  " id="htmlData">
+        <header>
+            
+          <div class="logo">
+            <img [src]="imageUrl$ | async" alt="Logo" class="w-12 select-none flex-none mr-2" width="50px">
+          
+          </div>
+          <div class="flight">
+            <strong>Facture</strong>
+            <small >Numéro: {{numInvoice}}</small>
+          </div>
+        </header>
+        <section class="cities">
+          <div class="city">
+            <small>Gaydel Tissu</small>
+      
+          </div>
+          <div class="city" >
+            
+            <small style="font-size: 8px;">Date: le {{ formattedDate }}</small>
+            
+            <small style="font-size: 8px;">Client: </small>
+          </div>
+        </section>
+        
+        <section class="strap">
+          <table class="table table-bordered table-sm">
+            <thead>
+              <tr>
+                <th scope="col">Quantité</th>
+                <th scope="col">Produit</th>
+                <th scope="col">Prix</th>
+                <th scope="col"> Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let sale of sales">
+                <td>{{ sale.quantity_sold }}</td>
+                <td>{{ sale.product }}</td>
+                <td>{{ sale.pU }} </td>
+                <td>{{ sale.pU * sale.quantity_sold }} </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="date">
+            <small>Total Facture : {{ totalVente }}</small>
+          </div>
+        </section>
+      </div>
+    
+  <!-- </div> -->
+</div>
+<!-- </div> -->
+  
+  

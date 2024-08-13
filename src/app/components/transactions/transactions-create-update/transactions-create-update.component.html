@@ -1,0 +1,76 @@
+<form (ngSubmit)="save()" [formGroup]="form">
+  <div class="flex items-center" mat-dialog-title>
+    <h2 *ngIf="form.controls['account_id'].value" class="headline m-0 flex-auto">
+      {{ getClientNameByAccountId(form.controls['account_id'].value) }}
+    </h2>
+    <h2 *ngIf="!form.controls['account_id'].value" class="headline m-0 flex-auto">
+      Nouvelle Transaction
+    </h2>
+    <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+      <mat-icon svgIcon="mat:close"></mat-icon>
+    </button>
+  </div>
+
+  <mat-divider class="text-border"></mat-divider>
+
+  <mat-dialog-content class="flex flex-col">
+    <mat-form-field class="flex-auto" *ngIf="showSiteField">
+      <mat-label>Site</mat-label>
+            <input [formControl]="siteCtrl" [matAutocomplete]="auto" matInput [value]="getSiteNameById(siteCtrl.value)" />
+
+      <input formControlName="site_id" matInput required min=1 />
+      <mat-icon matIconPrefix svgIcon="mat:edit"></mat-icon>
+    </mat-form-field>
+    <mat-form-field class="w-300 max-w-full">
+      <mat-label>Selectionner Compte</mat-label>
+      <input [formControl]="clientCtrl" [matAutocomplete]="auto" matInput [value]="getClientNameByAccountId(clientCtrl.value)" />
+      <mat-autocomplete #auto="matAutocomplete">
+        <mat-option *ngFor="let client of clients"  [value]="client.account_id">
+          <span class="flex items-center">
+            <span class="flex flex-col">Compte #{{ client.account_id }} - {{ client.full_name }}</span>
+          </span>
+        </mat-option>
+      </mat-autocomplete>
+      <button (click)="clientCtrl.reset()" *ngIf="clientCtrl.value" mat-icon-button matIconSuffix type="button">
+        <mat-icon svgIcon="mat:close"></mat-icon>
+      </button>
+      <button *ngIf="!clientCtrl.value" mat-icon-button matIconSuffix type="button">
+        <mat-icon svgIcon="mat:arrow_drop_down"></mat-icon>
+      </button>
+      <mat-error *ngIf="clientCtrl.invalid">Veuillez sélectionner un compte</mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="flex-auto">
+      <mat-label>Type Transaction</mat-label>
+      <mat-select formControlName="type" >
+        <mat-option value="debit">Débit</mat-option>
+        <mat-option value="credit">Crédit</mat-option>
+      </mat-select>
+      <mat-error *ngIf="form.get('type')?.hasError('required')">Type de transaction requis</mat-error>
+    </mat-form-field>
+
+    <mat-form-field  class="flex-auto">
+      <mat-label>Montant à Regler</mat-label>
+      <input formControlName="amount_settled" matInput />
+      <mat-icon matIconPrefix svgIcon="mat:edit"></mat-icon>
+      <mat-error *ngIf="form.get('amount_settled')?.hasError('required')">
+        Montant requise
+      </mat-error>
+      <mat-error *ngIf="form.get('amount_settled')?.hasError('min')">
+        Montant requise doit être au moins 1
+      </mat-error>
+    </mat-form-field>
+    
+
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close type="button">Annuler</button>
+    <button *ngIf="isCreateMode()  && form.invalid==false" color="primary" mat-flat-button type="submit">
+      Ajouter Transaction
+    </button>
+    <button *ngIf="isUpdateMode()  && form.invalid==false" color="primary" mat-flat-button type="submit">
+      Modifier Transaction
+    </button>
+  </mat-dialog-actions>
+</form>

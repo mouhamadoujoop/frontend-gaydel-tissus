@@ -1,0 +1,244 @@
+<form (ngSubmit)="save()" [formGroup]="form">
+     <div class="flex items-center" mat-dialog-title>
+       <h2 *ngIf="form.controls.first_name.value || form.controls.first_name.value" class="headline m-0 flex-auto">
+         {{ form.controls.first_name.value + " " }}
+       </h2>
+       <h2 *ngIf="!form.controls.first_name.value && !form.controls.first_name.value" class="headline m-0 flex-auto">
+         Nouveau Utilisateur
+       </h2>
+       <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+         <mat-icon svgIcon="mat:close"></mat-icon>
+       </button>
+     </div>
+   
+     <mat-divider class="text-border"></mat-divider>
+   
+     <mat-dialog-content class="flex flex-col">
+        <mat-form-field class="w-300 max-w-full" >
+              <mat-label>Selectionner un role</mat-label>
+              <input [formControl]="roleCtrl" [matAutocomplete]="autoRole" matInput [value]="getRoleNameById(roleCtrl.value)"/>
+              <mat-autocomplete #autoRole="matAutocomplete">
+                <mat-option
+                  *ngFor="let role of roles "
+                  [value]="role.id" >
+                  <span class="flex items-center">
+                    <span class="flex flex-col">
+                      {{ role.role_name }}
+                    </span>
+                  </span>
+                </mat-option>
+              </mat-autocomplete>
+              <button
+                (click)="roleCtrl.reset()"
+                *ngIf="roleCtrl.value"
+                mat-icon-button
+                matIconSuffix
+                type="button">
+                <mat-icon svgIcon="mat:close"></mat-icon>
+              </button>
+              <button *ngIf="!roleCtrl.value" mat-icon-button matIconSuffix type="button">
+                <mat-icon svgIcon="mat:arrow_drop_down"></mat-icon>
+              </button>
+              <mat-error *ngIf="roleCtrl.invalid">Veuillez sélectionner un role</mat-error>
+        </mat-form-field>
+
+        <div class="flex flex-col sm:flex-row">
+          <mat-form-field class="flex-auto">
+            <mat-label>Prénom</mat-label>
+            <input formControlName="first_name" matInput />
+            <mat-icon matIconPrefix svgIcon="mat:edit_location"></mat-icon>
+            <mat-error *ngIf="form.get('first_name')?.hasError('required')">
+              Le prénom de l'utilisateur est requise
+            </mat-error>
+            <mat-error *ngIf="form.get('first_name')?.hasError('pattern')">
+              Le nom de l'utilisateur doit contenir uniquement des caractères alphabétiques.
+            </mat-error>
+          </mat-form-field>
+      
+   
+          <mat-form-field class="sm:ml-6 flex-auto">
+            <mat-label>Nom</mat-label>
+            <input formControlName="last_name"  matInput />
+            <mat-icon matIconPrefix svgIcon="mat:edit_location"></mat-icon>
+            <mat-error *ngIf="form.get('last_name')?.hasError('required')">
+              Le nom de l'utilisateur est requise
+            </mat-error>
+            <mat-error *ngIf="form.get('last_name')?.hasError('pattern')">
+              Le nom de l'utilisateur doit contenir uniquement des caractères alphabétiques.
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="flex flex-col sm:flex-row" *ngIf="isCreateMode()">
+          <mat-form-field class="flex-auto" *ngIf="isCreateMode">
+              <mat-label>Password</mat-label>
+              <input
+                [type]="inputType"
+                formControlName="password"
+                matInput
+                required />
+              <button
+                (click)="toggleVisibility()"
+                mat-icon-button
+                matIconSuffix
+                matTooltip="Toggle Visibility"
+                type="button">
+                <mat-icon *ngIf="visible" svgIcon="mat:visibility"></mat-icon>
+                <mat-icon *ngIf="!visible" svgIcon="mat:visibility_off"></mat-icon>
+              </button>
+              <mat-error  *ngIf="form.controls.password.hasError('required')"
+              >Merci de saisire votre mot de passe
+              </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="sm:ml-6 flex-auto" >
+            <mat-label>Status</mat-label>
+            <input [formControl]="statusCtrl" [matAutocomplete]="autoStatus" matInput/>
+            <mat-autocomplete #autoStatus="matAutocomplete">
+              <mat-option
+                [value]="'Actif'" >
+                <span class="flex items-center">
+                  <span class="flex flex-col">
+                    Actif
+                  </span>
+                </span>
+              </mat-option>
+              <mat-option
+                [value]="'Inactif'" >
+                <span class="flex items-center">
+                  <span class="flex flex-col">
+                   Inactif
+                  </span>
+                </span>
+              </mat-option>
+            </mat-autocomplete>
+            <button
+              (click)="statusCtrl.reset()"
+              *ngIf="statusCtrl.value"
+              mat-icon-button
+              matIconSuffix
+              type="button">
+              <mat-icon svgIcon="mat:close"></mat-icon>
+            </button>
+            <button *ngIf="!statusCtrl.value" mat-icon-button matIconSuffix type="button">
+              <mat-icon svgIcon="mat:arrow_drop_down"></mat-icon>
+            </button>
+            <mat-error *ngIf="statusCtrl.invalid">Veuillez sélectionner un site</mat-error>
+          </mat-form-field>
+
+        </div>
+
+        
+        <mat-form-field class="w-300 max-w-full" *ngIf="isUpdateMode()">
+          <mat-label>Status</mat-label>
+          <input [formControl]="statusCtrl" [matAutocomplete]="autoStatus" matInput/>
+          <mat-autocomplete #autoStatus="matAutocomplete">
+            <mat-option
+              [value]="'Actif'" >
+              <span class="flex items-center">
+                <span class="flex flex-col">
+                  Actif
+                </span>
+              </span>
+            </mat-option>
+            <mat-option
+              [value]="'Inactif'" >
+              <span class="flex items-center">
+                <span class="flex flex-col">
+                  Inactif
+                </span>
+              </span>
+            </mat-option>
+          </mat-autocomplete>
+          <button
+            (click)="statusCtrl.reset()"
+            *ngIf="statusCtrl.value"
+            mat-icon-button
+            matIconSuffix
+            type="button">
+            <mat-icon svgIcon="mat:close"></mat-icon>
+          </button>
+          <button *ngIf="!statusCtrl.value" mat-icon-button matIconSuffix type="button">
+            <mat-icon svgIcon="mat:arrow_drop_down"></mat-icon>
+          </button>
+          <mat-error *ngIf="statusCtrl.invalid">Veuillez sélectionner un site</mat-error>
+        </mat-form-field>
+      
+    
+   
+       <mat-form-field class="flex-auto">
+         <mat-label>Télephone</mat-label>
+         <input formControlName="phone" matInput />
+         <mat-icon matIconPrefix svgIcon="mat:edit_location"></mat-icon>
+         <mat-error *ngIf="form.get('phone')?.hasError('required')">
+           Le numéro de téléphone est requise
+         </mat-error>
+         <mat-error *ngIf="form.get('phone')?.hasError('pattern')">
+          Le numéro de téléphone doit être valide (format sénégalais).
+        </mat-error>
+       </mat-form-field>
+   
+       <mat-form-field class="flex-auto">
+         <mat-label>Email</mat-label>
+         <input formControlName="email" matInput />
+         <mat-icon matIconPrefix svgIcon="mat:edit_location"></mat-icon>
+         <mat-error *ngIf="form.get('email')?.hasError('required')">
+           L'email de l'utilisateur est requise
+         </mat-error>
+         <mat-error *ngIf="form.get('email')?.hasError('email')">
+          L'email de l'utilisateur doit être valide.
+        </mat-error>
+       </mat-form-field>
+
+      <mat-form-field class="w-300 max-w-full" >
+          <mat-label>Selectionner un site</mat-label>
+          <input [formControl]="siteCtrl" [matAutocomplete]="autoSite" matInput [value]="getSiteNameById(siteCtrl.value)"/>
+          <mat-autocomplete #autoSite="matAutocomplete">
+            <mat-option
+              *ngFor="let site of sites "
+              [value]="site.id" >
+              <span class="flex items-center">
+                <span class="flex flex-col">
+                  {{ site.name }}
+                </span>
+              </span>
+            </mat-option>
+          </mat-autocomplete>
+          <button
+            (click)="siteCtrl.reset()"
+            *ngIf="siteCtrl.value"
+            mat-icon-button
+            matIconSuffix
+            type="button">
+            <mat-icon svgIcon="mat:close"></mat-icon>
+          </button>
+          <button *ngIf="!siteCtrl.value" mat-icon-button matIconSuffix type="button">
+            <mat-icon svgIcon="mat:arrow_drop_down"></mat-icon>
+          </button>
+          <mat-error *ngIf="siteCtrl.invalid">Veuillez sélectionner un site</mat-error>
+      </mat-form-field>
+
+     </mat-dialog-content>
+
+     <mat-dialog-actions align="end">
+       <button mat-button mat-dialog-close type="button">Annuler</button>
+       <button
+         *ngIf="isCreateMode() &&  roleCtrl.invalid==false && siteCtrl.invalid==false"
+         color="primary"
+         mat-flat-button
+         type="submit">
+         Ajouter un utilisateur
+       </button>
+       <button
+         *ngIf="isUpdateMode()"
+         color="primary"
+         mat-flat-button
+         type="submit">
+         Modifier l'utilisateur
+       </button>
+     </mat-dialog-actions>
+
+</form>
+   
+   
+   

@@ -1,0 +1,101 @@
+<form (ngSubmit)="save()" [formGroup]="form">
+    <div class="flex items-center" mat-dialog-title>
+  
+      <h2
+        *ngIf="isCreateMode()"
+        class="headline m-0 flex-auto">
+        Transfert depuis: {{source.name}}
+      </h2>
+  
+  
+      <button
+        class="text-secondary"
+        mat-dialog-close
+        mat-icon-button
+        type="button">
+        <mat-icon svgIcon="mat:close"></mat-icon>
+      </button>
+    </div>
+  
+    <mat-divider class="text-border"></mat-divider>
+  
+    <mat-dialog-content *ngIf="isCreateMode()" class="flex flex-col">
+  
+      <mat-form-field class="w-300 max-w-full" >
+        <mat-label>Selectionner Produit</mat-label>
+        <input [formControl]="productCtrl" [matAutocomplete]="auto" matInput [value]="getProductNameById(productCtrl.value)"/>
+        <mat-autocomplete #auto="matAutocomplete">
+          <mat-option
+            *ngFor="let product of products "
+            [value]="product.id" >
+            <span class="flex items-center">
+              <span class="flex flex-col">
+                {{ product.name }}
+              </span>
+            </span>
+          </mat-option>
+        </mat-autocomplete>
+        <button
+          (click)="productCtrl.reset()"
+          *ngIf="productCtrl.value"
+          mat-icon-button
+          matIconSuffix
+          type="button">
+          <mat-icon svgIcon="mat:close"></mat-icon>
+        </button>
+        <button *ngIf="!productCtrl.value" mat-icon-button matIconSuffix type="button">
+          <mat-icon svgIcon="mat:arrow_drop_down"></mat-icon>
+        </button>
+        <mat-error *ngIf="productCtrl.invalid">Veuillez sélectionner un produit</mat-error>
+      </mat-form-field>
+      <mat-form-field class="w-300 max-w-full" >
+        <mat-label>Selectionner Site Destination</mat-label>
+        <input [formControl]="siteCtrl" [matAutocomplete]="auto2" matInput [value]="getSiteNameById(siteCtrl.value)"/>
+        <mat-autocomplete #auto2="matAutocomplete">
+          <mat-option
+            *ngFor="let site of sites "
+            [value]="site.id" >
+            <span class="flex items-center">
+              <span class="flex flex-col">
+                {{ site.name }}
+              </span>
+            </span>
+          </mat-option>
+        </mat-autocomplete>
+        <button
+          (click)="siteCtrl.reset()"
+          *ngIf="siteCtrl.value"
+          mat-icon-button
+          matIconSuffix
+          type="button">
+          <mat-icon svgIcon="mat:close"></mat-icon>
+        </button>
+        <button *ngIf="!siteCtrl.value" mat-icon-button matIconSuffix type="button">
+          <mat-icon svgIcon="mat:arrow_drop_down"></mat-icon>
+        </button>
+        <mat-error *ngIf="siteCtrl.invalid">Veuillez sélectionner un Site</mat-error>
+      </mat-form-field>
+      <mat-form-field  class="flex-auto">
+        <mat-label>Quantité</mat-label>
+        <input type="number" formControlName="quantity_transferred" matInput required min=1 />
+        <mat-icon matIconPrefix svgIcon="mat:edit_location"></mat-icon>
+        <mat-error *ngIf="form.get('quantity_transferred')?.hasError('required')">
+          Quantité requise
+        </mat-error>
+        <mat-error *ngIf="form.get('quantity_transferred')?.hasError('min')">
+          Quantité doit être au moins 1
+        </mat-error>
+      </mat-form-field>
+  
+    </mat-dialog-content>
+    
+    <mat-dialog-actions align="end">
+      <button mat-button mat-dialog-close type="button">Annuler</button>
+      <button *ngIf="isCreateMode() && form.invalid==false && productCtrl.invalid==false && siteCtrl.invalid==false" color="primary" mat-flat-button type="submit" >
+      Transferer Stock
+      </button>
+    </mat-dialog-actions>
+  </form>
+  
+  
+  

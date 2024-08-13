@@ -1,0 +1,47 @@
+<form (ngSubmit)="save()" [formGroup]="form">
+  <div class="flex items-center" mat-dialog-title>
+    <h2>
+      Nouveau Versement
+    </h2>
+    <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+      <mat-icon svgIcon="mat:close"></mat-icon>
+    </button>
+  </div>
+
+  <mat-divider class="text-border"></mat-divider>
+
+  <mat-dialog-content class="flex flex-col">
+    <mat-form-field  class="flex-auto">
+      <mat-label>Date versement</mat-label>
+      <input type="date" formControlName="dateVersement" matInput />
+      <mat-icon matIconPrefix svgIcon="mat:edit"></mat-icon>
+      <mat-error *ngIf="form.get('dateVersement')?.hasError('required')">
+        Date requise
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field  class="flex-auto">
+      <mat-label>Montant à verser</mat-label>
+      <input formControlName="montantVerse" matInput />
+      <mat-icon matIconPrefix svgIcon="mat:edit"></mat-icon>
+      <mat-error *ngIf="form.get('montantVerse')?.hasError('required')">
+        Montant requise
+      </mat-error>
+      <mat-error *ngIf="form.get('montantVerse')?.hasError('min')">
+        Montant requise doit être au moins 1
+      </mat-error>
+    </mat-form-field>
+
+
+
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close type="button">Annuler</button>
+    <button *ngIf="isCreateMode()  && form.invalid==false" color="primary" mat-flat-button type="submit">
+      Nouveau Versement
+    </button>
+    <button *ngIf="isUpdateMode()  && form.invalid==false" color="primary" mat-flat-button type="submit">
+      Modifier Versement
+    </button>
+  </mat-dialog-actions>
+</form>

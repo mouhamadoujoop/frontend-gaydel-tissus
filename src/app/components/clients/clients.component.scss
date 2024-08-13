@@ -1,0 +1,14 @@
+.small-btn {
+  width: 50px; /* Réduire la largeur */
+  padding: 3px 6px; /* Réduire la hauteur et l'espace intérieur pour s'adapter à la nouvelle taille */
+  font-size: 12px; /* Diminue davantage la taille de la police */
+  background-color: #4f46e5; /* Couleur d'arrière-plan */
+  border-radius: 7px; /* Bordure arrondie */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Ombre légère */
+  color: white; /* Couleur du texte pour une meilleure lisibilité */
+}
+
+/* Pour le survol (optional) */
+.small-btn:hover {
+  background-color: #ff9800; /* Couleur d'arrière-plan sur survol */
+}

@@ -1,0 +1,66 @@
+<form (ngSubmit)="save()" [formGroup]="form">
+    <div class="flex items-center" mat-dialog-title>
+  
+      <h2
+        *ngIf="form.controls.details.value || form.controls.details.value"
+        class="headline m-0 flex-auto">
+        Modification Dépense
+      </h2>
+      <h2
+        *ngIf="!form.controls.details.value && !form.controls.details.value"
+        class="headline m-0 flex-auto">
+        Nouveau Dépense
+      </h2>
+  
+  
+      <button
+        class="text-secondary"
+        mat-dialog-close
+        mat-icon-button
+        type="button">
+        <mat-icon svgIcon="mat:close"></mat-icon>
+      </button>
+    </div>
+  
+    <mat-divider class="text-border"></mat-divider>
+  
+    <mat-dialog-content class="flex flex-col">
+  
+  
+      <mat-form-field class="flex-auto">
+        <mat-label>Détails</mat-label>
+        <input formControlName="details" matInput required/>
+        <mat-icon matIconPrefix svgIcon="mat:edit_location"></mat-icon>
+        <mat-error *ngIf="form.get('details')?.hasError('required')">
+          Détails requise
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field class="flex-auto">
+        <mat-label>Montant</mat-label>
+        <input type="number" formControlName="amount" matInput required min=1/>
+        <mat-icon matIconPrefix svgIcon="mat:edit_location"></mat-icon>
+        <mat-error *ngIf="form.get('amount')?.hasError('required')">
+          Montant requise
+        </mat-error>
+        <mat-error *ngIf="form.get('amount')?.hasError('min')">
+          Montannt doit être au moins 1
+        </mat-error>
+      </mat-form-field>
+  
+    </mat-dialog-content>
+  
+    <mat-dialog-actions align="end">
+      <button mat-button mat-dialog-close type="button">Annuler</button>
+      <button
+        *ngIf="isCreateMode() && form.invalid==false" color="primary" mat-flat-button type="submit">
+        Ajouter Dépense
+      </button>
+      <button
+        *ngIf="isUpdateMode() && form.invalid==false" color="primary" mat-flat-button type="submit">
+        Modifier Dépense
+      </button>
+    </mat-dialog-actions>
+  </form>
+  
+  
+  

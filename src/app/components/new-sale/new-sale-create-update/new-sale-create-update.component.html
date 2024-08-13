@@ -1,0 +1,80 @@
+<form (ngSubmit)="save()" [formGroup]="form">
+    <div class="flex items-center" mat-dialog-title>
+      <h2 *ngIf="form.controls.id.value" class="headline m-0 flex-auto">
+        {{ form.controls.product.value }}
+      </h2>
+      <h2 *ngIf="!form.controls.id.value" class="headline m-0 flex-auto">
+        Nouvelles Ventes
+      </h2>
+      <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+        <mat-icon svgIcon="mat:close"></mat-icon>
+      </button>
+    </div>
+  
+    <mat-divider class="text-border"></mat-divider>
+  
+    <mat-dialog-content class="flex flex-col">
+      <!-- Code pour le champ "Site" -->
+      
+  
+      <!-- Code pour le champ "Selectionner Produit" -->
+      <mat-form-field *ngIf="isCreateMode()" class="w-300 max-w-full">
+        <mat-label>Selectionner Produit</mat-label>
+        <input [formControl]="productCtrl" [matAutocomplete]="auto" matInput [value]="getProductNameById(productCtrl.value)" />
+        <mat-autocomplete #auto="matAutocomplete">
+          <mat-option *ngFor="let product of products" [value]="product.id">
+            <span class="flex items-center">
+              <span class="flex flex-col">
+                {{ product.name }}
+              </span>
+            </span>
+          </mat-option>
+        </mat-autocomplete>
+        <button (click)="productCtrl.reset()" *ngIf="productCtrl.value" mat-icon-button matIconSuffix type="button">
+          <mat-icon svgIcon="mat:close"></mat-icon>
+        </button>
+        <button *ngIf="!productCtrl.value" mat-icon-button matIconSuffix type="button">
+          <mat-icon svgIcon="mat:arrow_drop_down"></mat-icon>
+        </button>
+        <mat-error *ngIf="productCtrl.invalid">Veuillez sélectionner un produit</mat-error>
+      </mat-form-field>
+  
+      <!-- Code pour le champ "Quantité" -->
+      <mat-form-field class="flex-auto">
+        <mat-label>Quantité</mat-label>
+        <input  type="number" formControlName="quantity_sold" matInput required min=1 />
+        <mat-icon matIconPrefix svgIcon="mat:number"></mat-icon>
+        <mat-error *ngIf="form.get('quantity_sold')?.hasError('required')">
+          Quantité requise
+        </mat-error>
+        <mat-error *ngIf="form.get('quantity_sold')?.hasError('min')">
+          Quantité doit être au moins 1
+        </mat-error>
+      </mat-form-field>
+  
+      <!-- Code pour le champ "Prix Unitaire" -->
+      <mat-form-field class="flex-auto">
+        <mat-label>Prix Unitaire</mat-label>
+        <input  type="number" formControlName="pU" matInput required min=1 />
+        <mat-icon matIconPrefix svgIcon="mat:number"></mat-icon>
+        <mat-error *ngIf="form.get('pU')?.hasError('required')">
+          Prix requise
+        </mat-error>
+        <mat-error *ngIf="form.get('pU')?.hasError('min')">
+          Prix doit être au moins 1
+        </mat-error>
+      </mat-form-field>
+  
+    </mat-dialog-content>
+  
+    <mat-dialog-actions align="end">
+      <button mat-button mat-dialog-close type="button">Annuler</button>
+      <button *ngIf="isCreateMode()  && form.invalid==false" color="primary" mat-flat-button type="submit">
+        Ajouter Vente
+      </button>
+      <button *ngIf="isUpdateMode()  && form.invalid==false" color="primary" mat-flat-button type="submit">
+        Modifier Vente
+      </button>
+    </mat-dialog-actions>
+  </form>
+  
